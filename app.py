@@ -875,10 +875,7 @@ with gr.Blocks(
 
 demo.queue()
 demo.launch(
-    share=False,
-    inline=False,
-    debug=True,
-    show_error=True,
-    server_port=7860,
-    auth=authenticate,
+  server_name="0.0.0.0",
+  server_port=7860
+  auth=authenticate,
 )
