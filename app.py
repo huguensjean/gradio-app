@@ -875,7 +875,7 @@ with gr.Blocks(
 
 demo.queue()
 demo.launch(
-    share=True,
+    share=False,
     inline=False,
     debug=True,
     show_error=True,
