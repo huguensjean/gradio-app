@@ -62,7 +62,6 @@ resource "google_cloudbuild_trigger" "default" {
         "--platform=managed",
         "--allow-unauthenticated",
         "--port=7860",
-        "--region=${var.region}",
       ]
     }
 

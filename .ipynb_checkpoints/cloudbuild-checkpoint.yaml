@@ -22,9 +22,8 @@ steps:
      - '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPO}/gradio-app-image:$SHORT_SHA'
      - '--platform=managed'
      - '--allow-unauthenticated'
-      - '--port=7860'
-      - '--region'
-      - '${_REGION}'
+     - '--port=7860'
+     - '--region=${_REGION}'
 options:
   substitution_option: 'ALLOW_LOOSE'
 substitutions:
