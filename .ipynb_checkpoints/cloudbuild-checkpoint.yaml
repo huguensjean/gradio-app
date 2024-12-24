@@ -24,6 +24,7 @@ steps:
      - '--allow-unauthenticated'
      - '--port=7860'
      - '--region=${_REGION}'
+     - '--memory=1024Mi'
 options:
   substitution_option: 'ALLOW_LOOSE'
 substitutions:

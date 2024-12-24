@@ -42,8 +42,3 @@ COPY requirements.txt .
 RUN pip install --upgrade pip
 
 RUN pip install -r requirements.txt
-
-RUN git clone --branch main https://github.com/GoogleCloudPlatform/vertex-ai-samples.git
-
-RUN git clone --quiet --branch=main --depth=1 \
-     https://github.com/google-research/big_vision big_vision_repo
