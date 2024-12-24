@@ -1,13 +1,13 @@
 terraform {
   required_providers {
-    google-beta = {
-      source  = "hashicorp/google-beta"
-      version = "~> 5.45"
+    google = {
+      source  = "hashicorp/google"
+      version = "~> 5.0"
     }
   }
 }
 
-provider "google-beta" {
+provider "google" {
   project = var.project_id
   region  = var.region
 }
@@ -21,7 +21,7 @@ resource "google_artifact_registry_repository" "default" {
 }
 
 resource "google_cloudbuild_trigger" "default" {
-  provider = google-beta
+  provider      = google-beta
   name     = "gradio-app-trigger"
   project  = var.project_id
   location = var.region
@@ -72,7 +72,7 @@ resource "google_cloudbuild_trigger" "default" {
 }
 
 resource "google_cloud_run_service" "default" {
-  provider = google-beta
+  provider      = google-beta
   name     = "gradio-app"
   location = var.region
   project  = var.project_id
@@ -99,13 +99,13 @@ resource "google_cloud_run_service" "default" {
 }
 
 resource "google_project_service_identity" "artifact_registry" {
-  provider = google-beta
+  provider      = google-beta
   project  = var.project_id
   service  = "artifactregistry.googleapis.com"
 }
 
 resource "google_project_service_identity" "cloudbuild" {
-  provider = google-beta
+  provider      = google-beta
   project  = var.project_id
   service  = "cloudbuild.googleapis.com"
 }
@@ -115,12 +115,6 @@ resource "google_project_iam_member" "cloud_build_registry_pusher" {
   role     = "roles/artifactregistry.writer"
   member   = "serviceAccount:${google_project_service_identity.cloudbuild.email}"
   depends_on = [google_project_service_identity.cloudbuild]
-}
-
-resource "google_project_iam_member" "cloud_run_invoker" {
-  project = var.project_id
-  role    = "roles/run.invoker"
-  member  = "allUsers"
 }
 
 resource "google_project_iam_member" "cloud_run_deployer" {
@@ -152,10 +146,10 @@ resource "google_project_iam_member" "run_service_agent_role" {
 }
 
 resource "google_cloud_run_service_iam_member" "allow_all_invoker" {
-  location = var.region
-  project  = var.project_id
-  service  = google_cloud_run_service.default.name
-
-  role   = "roles/run.invoker"
+  provider      = google-beta
+  location  = var.region
+  project   = var.project_id
+  service   = google_cloud_run_service.default.name
+  role = "roles/run.invoker"
   member = "allUsers"
 }
