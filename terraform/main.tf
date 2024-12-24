@@ -1,19 +1,19 @@
 terraform {
   required_providers {
-    google = {
-      source  = "hashicorp/google"
-      version = "~> 5.0"
+    google-beta = {
+      source  = "hashicorp/google-beta"
+      version = "~> 5.45"
     }
   }
 }
 
-provider "google" {
+provider "google-beta" {
   project = var.project_id
   region  = var.region
 }
 
 resource "google_artifact_registry_repository" "default" {
-  provider      = google
+  provider      = google-beta
   project       = var.project_id
   location      = var.region
   repository_id = var.artifact_repo_name
@@ -21,13 +21,13 @@ resource "google_artifact_registry_repository" "default" {
 }
 
 resource "google_cloudbuild_trigger" "default" {
-  provider = google
+  provider = google-beta
   name     = "gradio-app-trigger"
   project  = var.project_id
   location = var.region
   github {
-    owner = "YOUR_GITHUB_USERNAME" # Replace
-    name  = "YOUR_GITHUB_REPO_NAME" # Replace
+    owner = "huguensjean" # Replace
+    name  = "gradio-app" # Replace
     push {
       branch = "^main$"
     }
@@ -72,7 +72,7 @@ resource "google_cloudbuild_trigger" "default" {
 }
 
 resource "google_cloud_run_service" "default" {
-  provider = google
+  provider = google-beta
   name     = "gradio-app"
   location = var.region
   project  = var.project_id
@@ -99,13 +99,13 @@ resource "google_cloud_run_service" "default" {
 }
 
 resource "google_project_service_identity" "artifact_registry" {
-  provider = google
+  provider = google-beta
   project  = var.project_id
   service  = "artifactregistry.googleapis.com"
 }
 
 resource "google_project_service_identity" "cloudbuild" {
-  provider = google
+  provider = google-beta
   project  = var.project_id
   service  = "cloudbuild.googleapis.com"
 }
@@ -149,4 +149,13 @@ resource "google_project_iam_member" "run_service_agent_role" {
   role       = "roles/iam.serviceAccountUser"
   member     = "serviceAccount:${google_project_service_identity.cloudbuild.email}"
   depends_on = [google_project_service_identity.cloudbuild]
+}
+
+resource "google_cloud_run_service_iam_member" "allow_all_invoker" {
+  location = var.region
+  project  = var.project_id
+  service  = google_cloud_run_service.default.name
+
+  role   = "roles/run.invoker"
+  member = "allUsers"
 }
