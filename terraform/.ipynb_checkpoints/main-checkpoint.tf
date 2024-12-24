@@ -2,7 +2,7 @@ terraform {
   required_providers {
     google = {
       source  = "hashicorp/google"
-      version = "~> 5.0"
+      version = "~> 5.45"
     }
   }
 }
@@ -62,6 +62,7 @@ resource "google_cloudbuild_trigger" "default" {
         "--platform=managed",
         "--allow-unauthenticated",
         "--port=7860",
+        "--region=${var.region}",
       ]
     }
 
