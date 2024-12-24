@@ -23,10 +23,9 @@ steps:
      - '--platform=managed'
      - '--allow-unauthenticated'
      - '--port=7860'
-     - '--region'
-     - '${_REGION}'
+     - '--region=${_REGION}'
 options:
   substitution_option: 'ALLOW_LOOSE'
 substitutions:
  _REGION: "us-central1"
- _ARTIFACT_REPO: "gradio-app"
+ _ARTIFACT_REPO: "gradio-app-repo"
